@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
+
 
 void *array_at(void *input, size_t element_size, int idx){
     return (char *) input + idx * element_size;
@@ -19,14 +21,23 @@ int array_every(void *arr, size_t element_size, size_t length, int (* callback)(
     return 0;
 }
 
-int function(void *element){
-    return *((int *) element) > 10;
+void array_fill(void *arr, size_t element_size, size_t length, void *value, int start, int end){
+    unsigned char *bytes = arr;
+
+    if (start < 0)
+        start = 0;
+
+    if (end > (int)length)
+        end = length;
+
+    for (int idx = start; idx < end; idx++) {
+        memcpy(bytes + idx * element_size, value, element_size);
+    }
 }
 
 int main(void){
     int arr[5] = {3, 5, 1, 9, 4};
    
-    printf("%d\n", array_every(arr, sizeof(int), 5, function));
 
     return 0;
 }
