@@ -2,42 +2,16 @@
 #include <string.h>
 #include <stdio.h>
 
-
-void *array_at(void *input, size_t element_size, int idx){
-    return (char *) input + idx * element_size;
-}
-
-//concat
-
-//copywithin
-
-//entries
-
-int array_every(void *arr, size_t element_size, size_t length, int (* callback)(void *element)){
-    for(size_t idx = 0; idx < length; idx++){
-        if(callback((char *) arr + idx * element_size) == 1) return 1;
-    }
-
-    return 0;
-}
-
-void array_fill(void *arr, size_t element_size, size_t length, void *value, int start, int end){
-    unsigned char *bytes = arr;
-
-    if (start < 0)
-        start = 0;
-
-    if (end > (int)length)
-        end = length;
-
-    for (int idx = start; idx < end; idx++) {
-        memcpy(bytes + idx * element_size, value, element_size);
-    }
+void * array_at(void *arr, size_t element_size, size_t length, signed int index){
+    unsigned char *bytes = (unsigned char *) arr;
+    if(index < 0) index = (length + index);
+    
+    return (void *) ((size_t) bytes + index * element_size);
 }
 
 int main(void){
-    int arr[5] = {3, 5, 1, 9, 4};
-   
+    int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
 
+    printf("%d\n", *(int *) array_at(arr, sizeof(int), 8, 1));
     return 0;
 }
