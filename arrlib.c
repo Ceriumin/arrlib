@@ -57,14 +57,54 @@ void *array_filter(void *arr, const size_t element_size, const size_t length, in
     return realloc(new_bytes, element_size * (length - curr_length));
 }
 
-int filter(void * element){
-    int *ptr = element;
-    return *ptr > 3;
+void *array_find(void *arr, size_t element_size, size_t length, int callback(void * element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = 0; idx < length; idx++){
+        if(callback(bytes + idx * element_size))
+            return bytes + idx * element_size;
+    }
+
+    return NULL;
+}
+
+void *array_find_index(void *arr, size_t element_size, size_t length, int callback(void * element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = 0 ; idx < length; idx++){
+       if(callback(bytes + idx * element_size))
+           return (size_t *) idx;
+    }
+
+    return NULL;
+}
+
+
+void *array_find_last(void *arr, size_t element_size, size_t length, int callback(void *element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = length; idx >= 0; idx--){
+        if(callback(bytes + idx * element_size))
+            return bytes + idx * element_size;
+    }
+
+    return NULL;
+}
+
+
+void *array_find_last_index(void *arr, size_t element_size, size_t length, int callback(void *element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = length; idx >= 0; idx--){
+        if(callback(bytes + idx * element_size))
+            return (size_t *) idx;
+    }
+
+    return NULL;
 }
 
 int main(void){
     int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-    int *new_arr = array_filter(arr, sizeof(int), 8, filter);
      
     return 0;
 }
