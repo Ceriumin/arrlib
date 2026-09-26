@@ -103,9 +103,41 @@ void *array_find_last_index(void *arr, size_t element_size, size_t length, int c
     return NULL;
 }
 
+// void * flat
+
+// void * flatmap
+
+
+void *array_foreach(void *arr, size_t element_size, size_t length, void callback(void *element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = 0; idx < length; idx++){
+           callback(bytes + idx * element_size); 
+    }
+
+    return bytes;
+}
+
+int array_includes(void *arr, size_t element_size, size_t length, int callback(void *element)){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = 0; idx < length; idx++){
+        if(callback(bytes + idx * element_size))
+            return 1;
+    }
+
+    return 0;
+}
+
+void function(void * element){
+    int *p = element;
+    printf("%d\n", *p);
+}
+
 int main(void){
     int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-     
+    
+    array_foreach(arr, sizeof(int), 8, function);
     return 0;
 }
 
