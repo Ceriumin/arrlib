@@ -156,16 +156,31 @@ int array_last_indexof(void *arr, size_t element_size, size_t length, void * ele
     return -1;
 }
 
+void *array_map(void *arr, size_t element_size, size_t length, void *(callback)(void * element)){
+    unsigned char * bytes = (unsigned char *) arr;
+    unsigned char * new_bytes = malloc(element_size * length);
 
-void function(void * element){
+    for(size_t idx = 0; idx < length; idx++){
+        memcpy(new_bytes + idx * element_size, callback(bytes + idx * element_size), element_size);
+    }
+    
+    return new_bytes;
+}
+
+void *function(void * element){
     int *p = element;
-    printf("%d\n", *p);
+    *p *= 2;
+    return p;
 }
 
 int main(void){
     int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-    
-    array_foreach(arr, sizeof(int), 8, function);
+    int *new_arr = array_map(arr, sizeof(int), 8, function);
+
+    for(int i = 0; i < 8; i++){
+        printf("%d\n", new_arr[i]);
+    }
+
     return 0;
 }
 
