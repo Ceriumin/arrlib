@@ -19,7 +19,7 @@ int array_every(const void *arr, const size_t element_size, const size_t length,
     unsigned char * bytes = (unsigned char *) arr; 
 
     for(size_t idx = 0; idx < length; idx++){
-        if(callback(bytes + idx * element_size) == 1){
+        if(callback(bytes + idx * element_size)){
            return 1; 
         }
     }
@@ -42,16 +42,38 @@ void *array_fill(void *arr, const size_t element_size, const size_t length, cons
     return arr;
 }
 
-int main(void){
-    int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-    int value = 5;
-    void *ptr = &value;
+void *array_filter(void *arr, const size_t element_size, const size_t length, int callback(void * element)){
+    unsigned char * bytes = (unsigned char*) arr;
+    unsigned char * new_bytes = malloc(element_size * length);
+    int curr_length = 0;
 
-    array_fill(arr, sizeof(int), 8, ptr, 3, 7);
-    
-    for(int i = 0; i < 7; i++){
-        printf("%d\n", arr[i]);
+    for(size_t idx = 0; idx < length; idx++){
+        if(callback(bytes + idx * element_size)){
+            memcpy(new_bytes + curr_length * element_size, bytes + idx * element_size, element_size);
+            curr_length++;
+        }
     }
 
+    return realloc(new_bytes, element_size * (length - curr_length));
+}
+
+int filter(void * element){
+    int *ptr = element;
+    return *ptr > 3;
+}
+
+int main(void){
+    int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
+    int *new_arr = array_filter(arr, sizeof(int), 8, filter);
+     
     return 0;
 }
+
+
+
+
+
+
+
+
+
