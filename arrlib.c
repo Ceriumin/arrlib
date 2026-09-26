@@ -68,15 +68,15 @@ void *array_find(void *arr, size_t element_size, size_t length, int callback(voi
     return NULL;
 }
 
-void *array_find_index(void *arr, size_t element_size, size_t length, int callback(void * element)){
+int array_find_index(void *arr, size_t element_size, size_t length, int callback(void * element)){
     unsigned char * bytes = (unsigned char *) arr;
 
     for(size_t idx = 0 ; idx < length; idx++){
        if(callback(bytes + idx * element_size))
-           return (size_t *) idx;
+           return idx;
     }
 
-    return NULL;
+    return -1;
 }
 
 
@@ -92,15 +92,15 @@ void *array_find_last(void *arr, size_t element_size, size_t length, int callbac
 }
 
 
-void *array_find_last_index(void *arr, size_t element_size, size_t length, int callback(void *element)){
+int array_find_last_index(void *arr, size_t element_size, size_t length, int callback(void *element)){
     unsigned char * bytes = (unsigned char *) arr;
 
     for(size_t idx = length; idx >= 0; idx--){
         if(callback(bytes + idx * element_size))
-            return (size_t *) idx;
+            return idx;
     }
 
-    return NULL;
+    return -1;
 }
 
 // void * flat
@@ -128,6 +128,34 @@ int array_includes(void *arr, size_t element_size, size_t length, int callback(v
 
     return 0;
 }
+
+int array_indexof(void *arr, size_t element_size, size_t length, void * element, int offset){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = offset; idx < length; idx++){
+        if(bytes + idx * element_size == element)
+            return idx;
+    }
+
+    return -1;
+}
+
+// join
+
+
+//keys
+
+int array_last_indexof(void *arr, size_t element_size, size_t length, void * element, int offset){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    for(size_t idx = length - offset; idx >= 0; idx--){
+        if(bytes + idx * element_size == element)
+            return idx;
+    }
+
+    return -1;
+}
+
 
 void function(void * element){
     int *p = element;
