@@ -83,7 +83,7 @@ int array_find_index(void *arr, size_t element_size, size_t length, int callback
 void *array_find_last(void *arr, size_t element_size, size_t length, int callback(void *element)){
     unsigned char * bytes = (unsigned char *) arr;
 
-    for(size_t idx = length; idx >= 0; idx--){
+    for(size_t idx = length; idx-- > 0;){
         if(callback(bytes + idx * element_size))
             return bytes + idx * element_size;
     }
@@ -95,7 +95,7 @@ void *array_find_last(void *arr, size_t element_size, size_t length, int callbac
 int array_find_last_index(void *arr, size_t element_size, size_t length, int callback(void *element)){
     unsigned char * bytes = (unsigned char *) arr;
 
-    for(size_t idx = length; idx >= 0; idx--){
+    for(size_t idx = length; idx-- > 0;){
         if(callback(bytes + idx * element_size))
             return idx;
     }
@@ -148,7 +148,7 @@ int array_indexof(void *arr, size_t element_size, size_t length, void * element,
 int array_last_indexof(void *arr, size_t element_size, size_t length, void * element, int offset){
     unsigned char * bytes = (unsigned char *) arr;
 
-    for(size_t idx = length - offset; idx >= 0; idx--){
+    for(size_t idx = length - offset; idx-- > 0;){
         if(bytes + idx * element_size == element)
             return idx;
     }
@@ -183,8 +183,8 @@ void *array_reduce(void *arr, size_t element_size, size_t length, void *(callbac
 void *array_reduce_right(void *arr, size_t element_size, size_t length, void *(callback)(void *acc, void *curr), void* initial_val){
     unsigned char * bytes = (unsigned char *) arr;
 
-    void *accumulated_val = initial_val;
-    for(size_t idx = length; idx >= 0; idx--){
+    void *accumulated_val = initial_val; 
+    for(size_t idx = length; idx-- > 0;){
         accumulated_val = callback(accumulated_val, bytes + idx * element_size);        
     }
 
