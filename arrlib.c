@@ -167,20 +167,40 @@ void *array_map(void *arr, size_t element_size, size_t length, void *(callback)(
     return new_bytes;
 }
 
-void *function(void * element){
-    int *p = element;
-    *p *= 2;
-    return p;
+
+void *array_reduce(void *arr, size_t element_size, size_t length, void *(callback)(void *acc, void *curr), void* initial_val){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    void *accumulated_val = initial_val;
+    for(size_t idx = 0; idx < length; idx++){
+        accumulated_val = callback(accumulated_val, bytes + idx * element_size);        
+    }
+
+    return accumulated_val;
+}
+
+
+void *array_reduce_right(void *arr, size_t element_size, size_t length, void *(callback)(void *acc, void *curr), void* initial_val){
+    unsigned char * bytes = (unsigned char *) arr;
+
+    void *accumulated_val = initial_val;
+    for(size_t idx = length; idx >= 0; idx--){
+        accumulated_val = callback(accumulated_val, bytes + idx * element_size);        
+    }
+
+    return accumulated_val;
+}
+
+void *function(void *acc, void *curr)
+{
+    *(int *)acc += *(int *)curr;
+    return acc;
 }
 
 int main(void){
     int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-    int *new_arr = array_map(arr, sizeof(int), 8, function);
-
-    for(int i = 0; i < 8; i++){
-        printf("%d\n", new_arr[i]);
-    }
-
+    int initial = 0;
+    printf("%d\n", *(int *) array_reduce(arr, sizeof(int), 7, function, &initial));
     return 0;
 }
 
