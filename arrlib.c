@@ -157,7 +157,7 @@ int array_last_indexof(void *arr, size_t element_size, size_t length, void * ele
 }
 
 void *array_map(void *arr, size_t element_size, size_t length, void *(callback)(void * element)){
-    unsigned char * bytes = (unsigned char *) arr;
+    unsigned char * bytes = (unsigned char *) arr; 
     unsigned char * new_bytes = malloc(element_size * length);
 
     for(size_t idx = 0; idx < length; idx++){
@@ -191,16 +191,27 @@ void *array_reduce_right(void *arr, size_t element_size, size_t length, void *(c
     return accumulated_val;
 }
 
-void *function(void *acc, void *curr)
-{
-    *(int *)acc += *(int *)curr;
-    return acc;
+
+void *reverse(void *arr, size_t element_size, size_t length){
+    unsigned char * bytes = (unsigned char *) arr; 
+    unsigned char * new_bytes = malloc(element_size * length);
+
+    for(size_t idx = length; idx-- > 0;){
+        memcpy(new_bytes + (length - idx - 1) * element_size, bytes + idx * element_size, element_size);
+    }
+
+    return new_bytes;
 }
+
 
 int main(void){
     int arr[8] = { 2, 5, 9, 0, 3, 4, 5, 1};
-    int initial = 0;
-    printf("%d\n", *(int *) array_reduce(arr, sizeof(int), 7, function, &initial));
+    int *reversed = (int *) reverse(arr, sizeof(int), 8);
+
+    for(int i = 0; i < 8; i++){
+        printf("%d\n", reversed[i]);
+    }
+
     return 0;
 }
 
